@@ -27,7 +27,7 @@ def inference(input_tensor, train, regularizer):
     # 考虑在当前层的作用，而不需要担心重名的问题。和标准LeNet-5 模型不大一样，这里
     # 定义的卷积层输入为28×28×l 的原始MNIST 图片像素。因为卷积层中使用了全0 填充，
     # 所以输出为28×28×32 的矩阵。
-    with tf .variable_scope('layerl-convl'):
+    with tf .variable_scope('layer1-conv1'):
         conv1_weights = tf.get_variable(
             "weight", [CONVl_SIZE, CONVl_SIZE, NUM_CHANNELS, CONVl_DEEP],
                     initializer=tf.truncated_normal_initializer(stddev=0.1))
@@ -44,7 +44,7 @@ def inference(input_tensor, train, regularizer):
     # 的矩阵。输出为14×14×32的矩阵。
     with tf.name_scope('layer2-pool1'):
         pool1 = tf.nn.max_pool(
-            relu1, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME' )
+            relu1, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
 
     # 声明第三层卷积层的变量并实现前向传播过程。这一层的输入为14×14×32的矩阵。
     # 输出为14x14x64的矩阵。
@@ -77,14 +77,15 @@ def inference(input_tensor, train, regularizer):
     nodes = pool_shape[1] * pool_shape[2] * pool_shape[3]
 
     # 通过tf.reshape 函数将第四层的输出变成一个batch的向量。
-    reshaped = tf.reshape(pool2, [pool_shape[0], nodes])
+    #reshaped = tf.reshape(pool2, [pool_shape[0], nodes])
+    reshaped = tf.reshape(pool2, [-1, nodes])
 
     # 声明第五层全连接层的变量并实现前向传播过程。这一层的输入是拉直之后的一组向量，
     # 向盘长度为3136 ，输出是一组长度为512的向量。这一层和之前在第5章介绍的基本
     # 一致，唯一的区别就是引入了dropout的概念。dropout在训练时会随机将部分节点的
     # 输出改为0 。dropout可以避免过拟合问题，从而使得模型在测试数据上的效果更好。
     #  dropout 一般只在全连接层而不是卷积层或者池化层使用。
-    with tf.variable_scope('layer5-fcl'):
+    with tf.variable_scope('layer5-fc1'):
         fc1_weights = tf.get_variable(
             "weight", [nodes, FC_SIZE],
             initializer=tf.truncated_normal_initializer(stddev=0.1))
@@ -104,7 +105,7 @@ def inference(input_tensor, train, regularizer):
             "weight", [FC_SIZE, NUM_LABELS],
             initializer=tf.truncated_normal_initializer(stddev=0.1))
         if regularizer != None:
-            tf.add_to_collection('losses ', regularizer(fc2_weights))
+            tf.add_to_collection('losses', regularizer(fc2_weights))
         fc2_biases = tf.get_variable(
             "bias", [NUM_LABELS],
             initializer=tf.constant_initializer(0.1))

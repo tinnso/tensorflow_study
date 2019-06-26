@@ -17,7 +17,7 @@ def evaluate(mnist):
         #x = tf.placeholder(
         #    tf.float32, [None, mnist_inference.INPUT_NODE], name='x-input')
         x = tf.placeholder(tf.float32, [
-            BATCH_SIZE,  # 第一维表示一个batch中样例的个数。
+            None,  # 第一维表示一个batch中样例的个数。
             mnist_inference.IMAGE_SIZE,  # 第二维和第三维表示图片的尺寸。
             mnist_inference.IMAGE_SIZE,
             mnist_inference.NUM_CHANNELS],  # 第四维表示图片的深度，对于RBG各
@@ -26,8 +26,14 @@ def evaluate(mnist):
 
         y_ = tf.placeholder(
             tf.float32, [None, mnist_inference.OUTPUT_NODE], name='y-input')
+        # added here, seems wrong with some
+        reshaped_xs = np.reshape(mnist.validation.images, (-1,
+                                      mnist_inference.IMAGE_SIZE,
+                                      mnist_inference.IMAGE_SIZE,
+                                      mnist_inference.NUM_CHANNELS))
 
-        validate_feed = {x: mnist.validation.images, y_: mnist.validation.labels}
+        #validate_feed = {x: mnist.validation.images, y_: mnist.validation.labels}
+        validate_feed = {x: reshaped_xs, y_: mnist.validation.labels}
 
 
         # 直接通过调用封装好的函数来计算前向传播的结果。因为测试时不关注正则化损失的值，
