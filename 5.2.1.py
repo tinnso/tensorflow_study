@@ -163,7 +163,7 @@ def train(mnist):
 # 主程序入口。
 def main(argv=None):
     # 声明处理MNIST 数据集的类,这个类在初始化时会自动下载数据。
-    mnist = input_data.read_data_sets(".\\data", one_hot=True)
+    mnist = input_data.read_data_sets("data", one_hot=True)
     train(mnist)
     # TensorFlow 提供的一个主程序入口, tf.app.run 会调用上面定义的main 函数。
 

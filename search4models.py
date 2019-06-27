@@ -26,11 +26,11 @@ def search(path, keyword):
 
 
 def main():
-    folder = "C:\\u_works\\03_project\\model list2"
+    folder = "./"
 
     for root, dirs, files in os.walk(folder):
         for file in files:
-            search(os.path.join(root, file), 'HT-Z9F')
+            search(os.path.join(root, file), 'words check')
 
 
 if __name__ == '__main__':

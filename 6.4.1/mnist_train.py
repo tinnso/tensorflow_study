@@ -18,7 +18,7 @@ MOVING_AVERAGE_DECAY = 0.99
 
 # 模型保存的路径和文件名。
 #MODEL_SAVE_PATH = "/path/to/model/"
-MODEL_SAVE_PATH = ".\\path\\to\\model\\"
+MODEL_SAVE_PATH = "path/to/model/"
 MODEL_NAME = "model.ckpt"
 
 def train(mnist) :
@@ -88,11 +88,12 @@ def train(mnist) :
                 saver.save(
                     sess, os.path.join(MODEL_SAVE_PATH, MODEL_NAME),
                     global_step=global_step)
+                #tf.summary.FileWriter("../tmp", sess.graph)
 
-
+        tf.summary.FileWriter("../tmp", sess.graph)
 def main(argv=None):
     #mnist = input_data.read_data_sets("/path/to/mnist_data", one_hot=True)
-    mnist = input_data.read_data_sets("..\\data", one_hot=True)
+    mnist = input_data.read_data_sets("../data", one_hot=True)
     train(mnist)
 
 if __name__ == '__main__':
